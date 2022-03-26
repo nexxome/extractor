@@ -15,6 +15,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Translation\Extractor\FileExtractor\FileExtractor;
 use Translation\Extractor\Model\SourceCollection;
+use Translation\Extractor\Model\SourceLocation;
 
 /**
  * Main class for all extractors. This is the service that will be loaded with file
@@ -31,7 +32,7 @@ final class Extractor
 
     public function extract(Finder $finder): SourceCollection
     {
-        return $this->doExtract($finder);
+        return $this->sort($this->doExtract($finder));
     }
 
     public function extractFromDirectory(string $dir): SourceCollection
@@ -57,6 +58,34 @@ final class Extractor
         }
 
         return $collection;
+    }
+
+    private function sort(SourceCollection $collection): SourceCollection
+    {
+        $locations = [];
+        foreach ($collection as $location) {
+            $locations[] = $location;
+        }
+
+        usort($locations, function (SourceLocation $a, SourceLocation $b) {
+            return strcmp($a->getPath(), $b->getPath());
+        });
+
+        usort($locations, function (SourceLocation $a, SourceLocation $b) {
+            return strcmp($a->getMessage(), $b->getMessage());
+        });
+
+        $sortedCollection = new SourceCollection();
+
+        foreach ($collection->getErrors() as $error) {
+            $sortedCollection->addError($error);
+        }
+
+        foreach ($locations as $location) {
+            $sortedCollection->addLocation($location);
+        }
+
+        return $sortedCollection;
     }
 
     private function getRelevantExtractorForFile(SplFileInfo $file): ?FileExtractor
