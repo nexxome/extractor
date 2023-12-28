@@ -29,7 +29,7 @@ class Worker
 {
     public const UNDEFINED_DOMAIN = 'messages';
 
-    private $stack = [];
+    protected $stack = [];
 
     public function work(Node $node, SourceCollection $collection, callable $getAbsoluteFilePath): Node
     {
