@@ -56,7 +56,7 @@ final class ValidationAnnotation extends BasePHPVisitor implements NodeVisitor
         if ($node instanceof Node\Stmt\Namespace_) {
             if (isset($node->name)) {
                 // save the namespace
-                $this->namespace = implode('\\', $node->name->parts);
+                $this->namespace = $node->name->name;
             }
 
             return null;

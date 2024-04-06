@@ -111,20 +111,8 @@ final class Constraint extends BasePHPVisitor implements NodeVisitor
             return null;
         }
 
-        $parts = $className->parts;
-        $isConstraintClass = false;
-
-        // we need to check every part since `Assert\NotBlank` would be split in 2 different pieces
-        foreach ($parts as $part) {
-            if (\in_array($part, self::CONSTRAINT_CLASS_NAMES)) {
-                $isConstraintClass = true;
-
-                break;
-            }
-        }
-
         // unsupported class
-        if (!$isConstraintClass) {
+        if(!\in_array($className->name, self::CONSTRAINT_CLASS_NAMES) ){
             return null;
         }
 

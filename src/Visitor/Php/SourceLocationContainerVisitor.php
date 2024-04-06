@@ -49,7 +49,7 @@ final class SourceLocationContainerVisitor extends BasePHPVisitor implements Nod
         if ($node instanceof Node\Stmt\Namespace_) {
             if (isset($node->name)) {
                 // Save namespace of this class for later.
-                $this->namespace = implode('\\', $node->name->parts);
+                $this->namespace = $node->name->name;
             }
             $this->useStatements = [];
 
@@ -57,8 +57,8 @@ final class SourceLocationContainerVisitor extends BasePHPVisitor implements Nod
         }
 
         if ($node instanceof Node\Stmt\UseUse) {
-            $key = isset($node->alias) ? $node->alias : $node->name->parts[\count($node->name->parts) - 1];
-            $this->useStatements[(string) $key] = implode('\\', $node->name->parts);
+            $key = isset($node->alias) ? $node->alias : substr($node->name->name, strrpos($node->name->name, '\\') + 1);
+            $this->useStatements[(string) $key] = $node->name->name;
 
             return null;
         }
@@ -69,7 +69,7 @@ final class SourceLocationContainerVisitor extends BasePHPVisitor implements Nod
 
         $isContainer = false;
         foreach ($node->implements as $interface) {
-            $name = implode('\\', $interface->parts);
+            $name = $interface->name;
             if (isset($this->useStatements[$name])) {
                 $name = $this->useStatements[$name];
             }

@@ -43,7 +43,7 @@ final class FormTypeLabelImplicit extends AbstractFormType implements NodeVisito
             if (\count($node->args) >= 2) {
                 $type = $node->args[1]->value;
                 if ($type instanceof Node\Scalar\String_ && 'Symfony\Component\Form\Extension\Core\Type\HiddenType' === $type->value
-                    || $type instanceof Node\Expr\ClassConstFetch && 'HiddenType' === $type->class->parts[0]) {
+                    || $type instanceof Node\Expr\ClassConstFetch && 'HiddenType' === $type->class->name) {
                     $skipLabel = true;
                 }
             }
