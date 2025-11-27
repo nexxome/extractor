@@ -73,10 +73,10 @@ final class ValidationAnnotation extends BasePHPVisitor implements NodeVisitor
             return null;
         }
 
-        $this->extractFromConstraints($metadata->constraints);
-        foreach ($metadata->members as $members) {
-            foreach ($members as $member) {
-                $this->extractFromConstraints($member->constraints);
+        $this->extractFromConstraints($metadata->getConstraints());
+        foreach ($metadata->getConstrainedProperties() as $property) {
+            foreach ($metadata->getPropertyMetadata($property) as $member) {
+                $this->extractFromConstraints($member->getConstraints());
             }
         }
 
