@@ -25,11 +25,11 @@ use Twig\Node\Node;
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  * @author Fabien Potencier <fabien@symfony.com>
  */
-final class Worker
+class Worker
 {
     public const UNDEFINED_DOMAIN = 'messages';
 
-    private array $stack = [];
+    protected array $stack = [];
 
     public function work(Node $node, SourceCollection $collection, callable $getAbsoluteFilePath): Node
     {
@@ -76,7 +76,7 @@ final class Worker
         return $node;
     }
 
-    private function extractContextFromJoinedFilters(): array
+    protected function extractContextFromJoinedFilters(): array
     {
         $context = [];
         for ($i = \count($this->stack) - 2; $i >= 0; --$i) {
@@ -102,7 +102,7 @@ final class Worker
         return $context;
     }
 
-    private function getReadDomainFromArguments(Node $arguments, int $index): ?string
+    protected function getReadDomainFromArguments(Node $arguments, int $index): ?string
     {
         if ($arguments->hasNode('domain')) {
             $argument = $arguments->getNode('domain');
@@ -115,7 +115,7 @@ final class Worker
         return $this->getReadDomainFromNode($argument);
     }
 
-    private function getReadDomainFromNode(Node $node): ?string
+    protected function getReadDomainFromNode(Node $node): ?string
     {
         if ($node instanceof ConstantExpression) {
             return $node->getAttribute('value');
